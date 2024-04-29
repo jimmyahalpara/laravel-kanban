@@ -4,13 +4,14 @@ namespace App\Providers;
 
 use App\Models\Card;
 use App\Models\Column;
+use App\Observers\CardObserver;
 use App\Observers\ColumnObserver;
-use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use App\Observers\CardObserver;
+use Illuminate\Database\Events\QueryExecuted;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,5 +45,7 @@ class AppServiceProvider extends ServiceProvider
                  return $value;
              });
          });
+
+         Schema::defaultStringLength(191);
     }
 }
