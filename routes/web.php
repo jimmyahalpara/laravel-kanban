@@ -5,10 +5,12 @@
     use App\Http\Controllers\ColumnCardCreateController;
     use App\Http\Controllers\CardsReorderUpdateController;
     use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardStoreController;
+use App\Http\Controllers\BoardDestroyController;
 use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardColumnCreateController;
 
@@ -38,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/boards/{board?}', [BoardController::class, 'show'])->name('boards');
+    Route::post('/boards', BoardStoreController::class)->name('boards.store');
+    Route::delete('/boards/{board}', BoardDestroyController::class)->name('boards.destroy');
 
     Route::post('/boards/{board}/columns', BoardColumnCreateController::class)
         ->name('boards.columns.store');

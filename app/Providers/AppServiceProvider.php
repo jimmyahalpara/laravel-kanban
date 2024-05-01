@@ -3,15 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Card;
+use Inertia\Inertia;
 use App\Models\Column;
 use App\Observers\CardObserver;
 use App\Observers\ColumnObserver;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Events\QueryExecuted;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,24 +26,29 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         // Observe deleting a column to delete all related cards
-         Column::observe(ColumnObserver::class);
+        // Observe deleting a column to delete all related cards
+        Column::observe(ColumnObserver::class);
 
-         // Observe adding a new card to increment the position accordingly
-         Card::observe(CardObserver::class);
+        // Observe adding a new card to increment the position accordingly
+        Card::observe(CardObserver::class);
 
-         // Make every nested array a collection, easier to work with
-         Collection::macro('recursive', function () {
-             return $this->map( function($value) {
-                 if (is_array($value) || is_object($value))
-                 {
-                     return collect($value)->recursive();
-                 }
-                 
-                 return $value;
-             });
-         });
+        // Make every nested array a collection, easier to work with
+        Collection::macro('recursive', function () {
+            return $this->map(function ($value) {
+                if (is_array($value) || is_object($value)) {
+                    return collect($value)->recursive();
+                }
 
-         Schema::defaultStringLength(191);
+                return $value;
+            });
+        });
+
+        Schema::defaultStringLength(191);
+
+
+        Inertia::share([
+            'boards' => fn () => auth()->user()->boards->map->only('id', 'title'),
+        ]);
+
     }
 }

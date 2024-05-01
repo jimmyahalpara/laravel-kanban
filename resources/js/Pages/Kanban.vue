@@ -36,9 +36,18 @@ const onReorderCommit = () => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-black text-2xl text-gray-800 leading-tight">
-        {{ boardTitle }}
-      </h2>
+      <div class="flex justify-start items-center">
+        <h2 class="font-black text-2xl text-gray-800 leading-tight">
+          {{ boardTitle }}
+        </h2>
+        <!-- delete button -->
+        <button
+          class="px-4 py-2 bg-red-500 text-white rounded-md mx-4"
+          @click="router.delete(route('boards.destroy', board.data.id))"
+        >
+          Delete
+        </button>
+      </div>
     </template>
 
     <div class="flex-1 flex flex-col h-full overflow-hidden">

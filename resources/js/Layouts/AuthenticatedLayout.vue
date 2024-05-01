@@ -35,11 +35,13 @@ const showingNavigationDropdown = ref(false);
                 Dashboard
               </NavLink>
               <NavLink
-                :href="route('boards')"
-                :active="route().current('boards')"
+                v-for="boards in $page.props.boards"
+                :href="route('boards', boards.id)"
+                :active="route().current('boards') && route().params.board == boards.id"
               >
-                Kanban
-              </NavLink>
+                {{ boards.title }}
+            </NavLink>
+            <NewBoardForm/>
             </div>
           </div>
 
@@ -188,3 +190,12 @@ const showingNavigationDropdown = ref(false);
     </main>
   </div>
 </template>
+<script>
+import NewBoardForm from '@/Components/NewBoardForm.vue';
+
+export default {
+  components: {
+    NewBoardForm,
+  },
+};
+</script>

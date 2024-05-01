@@ -45,6 +45,6 @@ class User extends Authenticatable
 
     public function boards(): HasMany
     {
-        return $this->hasMany(Board::class);
+        return $this->hasMany(Board::class) -> orderBy('created_at', 'asc');
     }
 }
