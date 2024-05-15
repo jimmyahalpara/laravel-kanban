@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
+            'boards' => $request->user() ? $request->user()->boards->map->only('id', 'title'): [],
         ]);
     }
 }
