@@ -44,11 +44,5 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Schema::defaultStringLength(191);
-
-
-        Inertia::share([
-            'boards' => fn () => auth()->user()->boards->map->only('id', 'title'),
-        ]);
-
     }
 }
