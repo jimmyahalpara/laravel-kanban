@@ -65,6 +65,13 @@ const showForm = async () => {
         type="date"
         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
       />
+      <small
+        @click="form.deadline = null"
+        v-if="form.deadline"
+        class="text-xs text-red-800 font-bold cursor-pointer"
+      >
+        Clear
+      </small>
       <div class="mt-2 space-x-2">
         <button
           type="submit"
