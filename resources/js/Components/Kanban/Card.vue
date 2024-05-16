@@ -89,7 +89,7 @@ const greenborder = computed(() => {
 // return true if card.is_completed is not true and card.deadline is today
 const redborder = computed(() => {
   console.log('new Date(props.card.deadline).toDateString() :>> ', new Date(props.card.deadline).toDateString());
-  return !props.card.is_completed && (new Date(props.card.deadline) <= new Date() || new Date(props.card.deadline).toDateString() === new Date().toDateString());
+  return props.card.deadline && !props.card.is_completed && (new Date(props.card.deadline) <= new Date() || new Date(props.card.deadline).toDateString() === new Date().toDateString());
 });
 </script>
 
