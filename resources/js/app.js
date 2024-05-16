@@ -7,6 +7,9 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { Ziggy } from './ziggy';
 
+// import moment 
+import moment from 'moment';
+
 const appName =
   window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -21,7 +24,16 @@ createInertiaApp({
     var app = createApp({ render: () => h(App, props) })
       .use(plugin)
       .use(ZiggyVue, Ziggy)
-      .mount(el);
+
+    // add filter to format date using moment to human readable format like - 2 days ago
+    app.config.globalProperties.$filters = {
+      humanFormatDate(value) {
+        return moment(value).fromNow();
+      }
+    }
+
+    app.mount(el);
+
     return app;
   },
   progress: {

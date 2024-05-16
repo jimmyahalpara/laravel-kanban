@@ -11,9 +11,12 @@ const emit = defineEmits(['created']);
 
 const form = useForm({
   content: '',
+  title: '',
+  deadline: '',
 });
 
 const inputCardContentRef = ref();
+const inputCardTitleRef = ref();
 const isCreating = ref(false);
 
 const onSubmit = () => {
@@ -29,7 +32,7 @@ const onSubmit = () => {
 const showForm = async () => {
   isCreating.value = true;
   await nextTick(); // wait for form to be rendered
-  inputCardContentRef.value.focus();
+  inputCardTitleRef.value.focus();
 };
 </script>
 
@@ -40,6 +43,13 @@ const showForm = async () => {
       @keydown.esc="isCreating = false"
       @submit.prevent="onSubmit"
     >
+      <input
+        v-model="form.title"
+        type="text"
+        placeholder="Card title ..."
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        ref="inputCardTitleRef"
+      />
       <textarea
         v-model="form.content"
         type="text"
@@ -50,6 +60,11 @@ const showForm = async () => {
         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
       >
       </textarea>
+      <input
+        v-model="form.deadline"
+        type="date"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+      />
       <div class="mt-2 space-x-2">
         <button
           type="submit"

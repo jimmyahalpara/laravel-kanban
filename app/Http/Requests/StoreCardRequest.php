@@ -24,6 +24,7 @@ class StoreCardRequest extends FormRequest
     {
         return [
             'content' => ['required', 'min:10'],
+            'title' => ['required', 'min:3'],
         ];
     }
 

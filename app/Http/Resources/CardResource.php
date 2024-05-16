@@ -19,6 +19,9 @@ class CardResource extends JsonResource
             'content' => $this->content,
             'position' => $this->position,
             'column' => $this->column_id,
+            'title' => $this->title,
+            'is_completed' => $this->is_completed,
+            'deadline' => $this->deadline? $this->deadline -> format('Y-m-d H:i') : null,
         ];
     }
 }
