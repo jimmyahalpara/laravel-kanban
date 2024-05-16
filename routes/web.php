@@ -54,7 +54,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/columns/{column}/cards/{card}', ColumnCardUpdateController::class)
         ->scopeBindings()->name('columns.cards.update');
-
     Route::delete('/columns/{column}/cards/{card}', ColumnCardDestroyController::class)
         ->scopeBindings()->name('columns.cards.destroy');
 

@@ -32,6 +32,7 @@
     "@headlessui/vue": "^1.7.11",
     "@heroicons/vue": "^2.0.16",
     "lodash.clonedeep": "^4.5.0",
+    "moment": "^2.30.1",
     "vuedraggable": "^4.1.0"
   },
   "lint-staged": {

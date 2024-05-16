@@ -14,6 +14,9 @@ class ColumnCardUpdateController extends Controller
      */
     public function __invoke(UpdateCardRequest $request, Column $column, Card $card): RedirectResponse
     {
+        $data = $request->all();
+        // remove values where value is null
+        $data = array_filter($data, fn ($value) => $value !== null);
         $card->update($request->all());
         return back();
     }

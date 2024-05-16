@@ -14,7 +14,22 @@ class Card extends Model
         'content',
         'column_id',
         'position',
+        'title',
+        'is_completed',
+        'deadline',
     ];
+
+    // casts 
+    protected $casts = [
+        'is_completed' => 'boolean',
+        'deadline' => 'datetime',
+    ];
+
+    // // hidden created_at and updated_at
+    // protected $hidden = [
+    //     'created_at',
+    //     'updated_at',
+    // ];
 
     public function column(): BelongsTo
     {
