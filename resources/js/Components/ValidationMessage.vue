@@ -75,7 +75,7 @@ export default {
     },
     watch: {
         '$page.props.errors'(value) {
-            if (value) {
+            if (value && Object.keys(value).length > 0) {
                 this.showMessage = true;
                 this.totalMilliSeconds = 3000;
                 // this.totalMilliSeconds += (value.length) * 1000;
