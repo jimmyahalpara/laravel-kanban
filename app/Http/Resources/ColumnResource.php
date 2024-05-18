@@ -18,7 +18,7 @@ class ColumnResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'board' => $this->board_id,
-            'cards' => CardResource::collection($this->whenLoaded('cards')),
+            'cards' => CardResource::collection($this->cards),
         ];
     }
 }
