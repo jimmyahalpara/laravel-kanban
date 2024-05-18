@@ -7,10 +7,13 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
+import ValidationMessage from '@/Components/ValidationMessage.vue';
+
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
+  <ValidationMessage />
   <div class="h-screen bg-gray-100 flex flex-col">
     <nav class="bg-white border-b border-gray-100">
       <!-- Primary Navigation Menu -->
