@@ -34,7 +34,11 @@ const props = defineProps({
             @click="$event => menu.action()"
             :class="{ 'bg-gray-100': active }"
             class="block px-4 py-2 text-sm text-gray-700"
-            >{{ menu.name }}</a
+            >
+            {{ menu.name }}
+            <span v-if="menu.icon" v-html="menu.icon" class="float-right">
+            </span>
+            </a
           >
         </MenuItem>
       </MenuItems>

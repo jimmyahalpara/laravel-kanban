@@ -17,7 +17,7 @@ class BoardResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'columns' => ColumnResource::collection($this->whenLoaded('columns')),
+            'columns' => ColumnResource::collection($this->orderedColumns),
         ];
     }
 }

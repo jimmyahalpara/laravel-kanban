@@ -26,8 +26,23 @@ class Board extends Model
         return $this->hasMany(Column::class)->oldest();
     }
 
+    public function orderedColumns(): HasMany
+    {
+        return $this->hasMany(Column::class)->orderBy('order');
+    }
+
     public function addColumn(Column $column): void
     {
         $this->columns()->save($column);
+    }
+
+    public function resetColumnOrder(): void
+    {
+        echo 'Resetting column order for board ' . $this->title . PHP_EOL;
+        $this->columns->each(function ($column, $index) {
+            echo $column->title . ' ' . $index . PHP_EOL;
+            $column->order = $index;
+            $column->save();
+        });
     }
 }
