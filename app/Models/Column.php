@@ -40,7 +40,7 @@ class Column extends Model
 
     public function addCard(Card $card): void{
         $card = $this->cards()->save($card);
-        if ($card -> parent -> deadline){
+        if ($card -> parent && $card -> parent -> deadline){
             $card -> update(['deadline' => $card -> parent -> deadline]);
         }
     }
