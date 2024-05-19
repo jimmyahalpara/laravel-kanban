@@ -23,7 +23,6 @@ class UpdateCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['min:10'],
         ];
     }
 }
