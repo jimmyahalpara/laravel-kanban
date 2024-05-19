@@ -7,6 +7,7 @@ import Card from '@/Components/Kanban/Card.vue';
 import CardCreate from '@/Components/Kanban/CardCreate.vue';
 import ConfirmDialog from '@/Components/Kanban/ConfirmDialog.vue';
 import MenuDropDown from '@/Components/Kanban/MenuDropDown.vue';
+import EditableText from '@/Components/EditableText.vue';
 
 const props = defineProps({
   board: Number,
@@ -91,7 +92,7 @@ const onReorderEnds = () => {
   <div class="w-72 max-h-full bg-gray-200 flex flex-col rounded-md">
     <div class="flex items-center justify-between px-3 py-2">
       <h3 class="font-semibold text-sm text-gray-700">
-        {{ columnTitle }}
+        <EditableText :value="columnTitle" @textinput="router.post(route('columns.update.title', { column: props.column.id }), { title: $event })"/>
       </h3>
       <MenuDropDown :menuItems="menuItems" />
     </div>
