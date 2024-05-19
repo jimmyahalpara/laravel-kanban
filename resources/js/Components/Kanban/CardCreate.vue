@@ -1,19 +1,48 @@
 <script setup>
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { PlusIcon } from '@heroicons/vue/24/solid';
 
 const props = defineProps({
   column: Object,
+  parent: {
+    type: Object,
+    default: null,
+    required: false,
+  },
+  openTrigger: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
 });
 
-const emit = defineEmits(['created']);
+const emit = defineEmits(['created', 'clearParentId']);
 
 const form = useForm({
   content: '',
   title: '',
   deadline: '',
+  parent_id: props?.parent && props?.parent?.id ? props.parent.id : null,
 });
+
+// add watcher on props.parent_id 
+watch(
+  () => props.parent,
+  (value) => {
+    form.parent_id = value?.id ? value.id : null;
+  }
+);
+
+// watch openTrigger
+watch(
+  () => props.openTrigger,
+  () => {
+    if (props.openTrigger) {
+      showForm(false);
+    }
+  }
+);
 
 const inputCardContentRef = ref();
 const inputCardTitleRef = ref();
@@ -29,7 +58,10 @@ const onSubmit = () => {
   });
 };
 
-const showForm = async () => {
+const showForm = async (withoutParent = true) => {
+  if (withoutParent) {
+    emit('clearParentId');
+  }
   isCreating.value = true;
   await nextTick(); // wait for form to be rendered
   inputCardTitleRef.value.focus();
@@ -43,6 +75,9 @@ const showForm = async () => {
       @keydown.esc="isCreating = false"
       @submit.prevent="onSubmit"
     >
+      <small v-if="props.parent && props.parent.title">
+        Adding card to <strong>{{ props.parent.title }}</strong>
+      </small>
       <input
         v-model="form.title"
         type="text"
@@ -80,7 +115,7 @@ const showForm = async () => {
           Add card
         </button>
         <button
-          @click.prevent="isCreating = false"
+          @click.prevent="isCreating = false; emit('clearParentId')"
           type="button"
           class="inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
