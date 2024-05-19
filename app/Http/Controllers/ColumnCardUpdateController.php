@@ -27,6 +27,11 @@ class ColumnCardUpdateController extends Controller
         else {
             $card->parent?->update(['is_completed' => false]);
         }
+
+        // if parents all children are complete, mark parent as complete
+        if ($card->parent?->children->every->is_completed) {
+            $card->parent->update(['is_completed' => true]);
+        }
         return back();
     }
 }
