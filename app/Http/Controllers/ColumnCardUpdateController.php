@@ -18,6 +18,15 @@ class ColumnCardUpdateController extends Controller
         // remove values where value is null
         $data = array_filter($data, fn ($value) => $value !== null);
         $card->update($request->all());
+
+        // if card is complete, mark all children as complete
+        if ($card->is_completed) {
+            $card->children->each->update(['is_completed' => true]);
+        }
+        // if card is incomplete, mark all parents as incomplete
+        else {
+            $card->parent?->update(['is_completed' => false]);
+        }
         return back();
     }
 }
