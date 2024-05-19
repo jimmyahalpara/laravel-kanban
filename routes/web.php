@@ -13,7 +13,9 @@ use App\Http\Controllers\BoardStoreController;
 use App\Http\Controllers\ColumnMoveController;
 use App\Http\Controllers\BoardDestroyController;
 use App\Http\Controllers\ColumnDestroyController;
+use App\Http\Controllers\BoardUpdateTitleController;
 use App\Http\Controllers\BoardColumnCreateController;
+use App\Http\Controllers\ColumnUpdateTitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,11 +44,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/boards/{board?}', [BoardController::class, 'show'])->name('boards');
     Route::post('/boards', BoardStoreController::class)->name('boards.store');
+    Route::post('/boards/{board}/update-title', BoardUpdateTitleController::class)->name('boards.update.title');
     Route::delete('/boards/{board}', BoardDestroyController::class)->name('boards.destroy');
 
     Route::post('/boards/{board}/columns', BoardColumnCreateController::class)
         ->name('boards.columns.store');
 
+    Route::post('/columns/{column}/update-title', ColumnUpdateTitleController::class)
+        ->name('columns.update.title');
     Route::delete('/columns/{column}', ColumnDestroyController::class)
         ->name('columns.destroy');
     Route::post('/columns/{column}/move', ColumnMoveController::class)
