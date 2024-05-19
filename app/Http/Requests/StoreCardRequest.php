@@ -23,7 +23,7 @@ class StoreCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'min:10'],
+            'content' => ['required'],
             'title' => ['required', 'min:3'],
         ];
     }
