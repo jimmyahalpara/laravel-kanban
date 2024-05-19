@@ -29,6 +29,9 @@ watch(
 
 // TODO: Move to composable useModal
 const isOpen = ref(false);
+const parent = ref(null);
+// random number to trigger
+const randomOpenTrigger = ref(0);
 const closeModal = confirm => {
   isOpen.value = false;
   if (confirm) {
@@ -44,10 +47,20 @@ const moveRight = () => {
   router.post(route('columns.move', { column: props?.column?.id, direction: 'right' }));
 }
 
+const addChildHandler = card => {
+  parent.value = card;
+  randomOpenTrigger.value = Math.random();
+};
+
+const clearParentId = () => {
+  parent.value = null;
+};
+
 const onCardCreated = async () => {
   // scroll to the bottom of the list
   await nextTick();
   cardsRef.value.scrollTop = cardsRef.value.scrollHeight;
+  parent.value = null;
 };
 
 const menuItems = [
@@ -69,7 +82,7 @@ const menuItems = [
 
 const onReorderCards = () => {
   const cloned = cloneDeep(cards?.value);
-
+  
   const cardsWithOrder = [
     ...cloned?.map((card, index) => ({
       id: card.id,
@@ -81,6 +94,22 @@ const onReorderCards = () => {
     id: props?.column?.id,
     cards: cardsWithOrder,
   });
+};
+
+const moveToTop = card => {
+  const cloned = cloneDeep(cards?.value);
+  const index = cloned.findIndex(c => c.id === card.id);
+  cloned.splice(index, 1);
+  cloned.unshift(card);
+  cards.value = cloned;
+  emit('reorder-change', {
+    id: props?.column?.id,
+    cards: cloned.map((card, index) => ({
+      id: card.id,
+      position: index * 1000 + 1000,
+    })),
+  });
+  emit('reorder-commit');
 };
 
 const onReorderEnds = () => {
@@ -111,12 +140,22 @@ const onReorderEnds = () => {
         >
           <template #item="{ element }">
             <li>
-              <Card :card="element" />
+              <Card 
+                :card="element" 
+                @moveToTop="moveToTop(element)"
+                @addChild="addChildHandler(element)"
+              />
             </li>
           </template>
         </Draggable>
         <div class="px-3 mt-3">
-          <CardCreate :column="column" @created="onCardCreated" />
+          <CardCreate 
+            :parent="parent"
+            :column="column" 
+            :openTrigger="randomOpenTrigger"
+            @created="onCardCreated" 
+            @clearParentId="clearParentId"
+            />
         </div>
       </div>
     </div>

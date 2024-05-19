@@ -10,6 +10,8 @@ const props = defineProps({
   card: Object,
 });
 
+const emit = defineEmits(['moveToTop', 'addChild']);
+
 // TODO: Move to composable useModal
 const isOpen = ref(false);
 const closeModal = confirm => {
@@ -158,10 +160,23 @@ const redborder = computed(() => {
       </div>
     </form>
     <div v-else>
+      <p>
+        <span class="text-blue-700 text-xs" 
+          v-if="card.parent && card.parent.title">
+          <strong>{{ card.parent.title }}</strong>
+        </span>
+      </p>
       <b>
         {{ props.card.title }}
       </b>
       <p class="text-sm">{{ cardContent }}</p>
+      <p v-if="card.children && card.children.length" class="text-sm text-blue-500 pl-3 py-2">
+        <ul>
+          <li v-for="child in card.children" :key="child.id">
+            <b>• {{ child.title }} </b>
+          </li>
+        </ul>
+      </p>
       <!-- deadline in human readable format using moment js -->
       <small v-if="props.card.deadline" class="text-xs text-red-800 font-bold">
         {{  $filters.humanFormatDate(new Date(props.card.deadline)) }}
@@ -169,6 +184,18 @@ const redborder = computed(() => {
       <div
         class="hidden absolute right-1 inset-0 group-hover:flex justify-end space-x-2 items-center"
       >
+        <button
+          @click.prevent="emit('addChild', props.card);"
+          class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center"
+        >
+          <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M20,9H16a1,1,0,0,0-1,1v1H7V7H8A1,1,0,0,0,9,6V2A1,1,0,0,0,8,1H4A1,1,0,0,0,3,2V6A1,1,0,0,0,4,7H5V20a1,1,0,0,0,1,1h9v1a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V18a1,1,0,0,0-1-1H16a1,1,0,0,0-1,1v1H7V13h8v1a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V10A1,1,0,0,0,20,9ZM5,3H7V5H5ZM17,19h2v2H17Zm2-6H17V11h2Z"></path></g></svg>
+        </button>
+        <button
+          @click.prevent="emit('moveToTop', props.card);"
+          class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center"
+        >
+          <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="#000000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        </button>
         <button
           @click.prevent="showForm"
           class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center"

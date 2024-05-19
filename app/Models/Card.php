@@ -17,6 +17,7 @@ class Card extends Model
         'title',
         'is_completed',
         'deadline',
+        'parent_id'
     ];
 
     // casts 
@@ -34,5 +35,15 @@ class Card extends Model
     public function column(): BelongsTo
     {
         return $this->belongsTo(Column::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Card::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Card::class, 'parent_id');
     }
 }
