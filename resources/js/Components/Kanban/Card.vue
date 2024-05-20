@@ -55,6 +55,7 @@ const form = useForm({
   content: props?.card?.content,
   title: props?.card?.title,
   deadline: props?.card?.deadline,
+  total_quantity: props?.card?.total_quantity,
 });
 
 // if any of the props changes, update the form
@@ -112,11 +113,15 @@ const greenborder = computed(() => {
 const redborder = computed(() => {
   return props.card.deadline && !props.card.is_completed && (new Date(props.card.deadline) <= new Date() || new Date(props.card.deadline).toDateString() === new Date().toDateString());
 });
+
+const progressBarWidth = computed(() => {
+  return props.card.completed_quantity ? `${(props.card.completed_quantity / props.card.total_quantity) * 100}%` : '0%';
+});
 </script>
 
 <template>
   <div :class="[
-    'cursor-move relative p-2 bg-white shadow rounded-md border hover:bg-gray-50 animated-border',
+    'cursor-move relative p-2 bg-white shadow rounded-md border hover:bg-gray-50 animated-border overflow-hidden',
     {
       'border-gray-300': greyborder,
       'border-green-500': greenborder,
@@ -141,6 +146,16 @@ const redborder = computed(() => {
         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
       <!-- small on hover underline click clear deadline to null -->
       <small @click="form.deadline = null" v-if="form.deadline" class="text-xs text-red-800 font-bold cursor-pointer">
+        Clear
+      </small>
+      <!-- total quantity with clear option -->
+      <label for="total_quantity" class="block text-sm font-medium text-gray-700 mt-2">
+        Total Quantity
+      </label>
+      <input type="number" v-model="form.total_quantity" placeholder="Total Quantity ..."
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+      <!-- small on hover underline click clear total quantity to null -->
+      <small @click="form.total_quantity = null" v-if="form.total_quantity" class="text-xs text-red-800 font-bold cursor-pointer">
         Clear
       </small>
 
@@ -232,15 +247,11 @@ const redborder = computed(() => {
           </button>
         </div>
       </div>
-      
+
       <p v-if="card.children && card.children.length" class="text-sm text-blue-500 pl-3 py-2">
       <ul>
-        <li 
-          class="flex items-center cursor-pointer hover:underline" 
-          v-for="child in card.children" 
-          :key="child.id"
-          @click="scrollToCard(child)"
-        >
+        <li class="flex items-center cursor-pointer hover:underline" v-for="child in card.children" :key="child.id"
+          @click="scrollToCard(child)">
           <div class="pl-1">
             <svg v-if="child.is_completed" height="15px" width="15px" version="1.1" id="Layer_1"
               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1792 1792"
@@ -276,6 +287,39 @@ const redborder = computed(() => {
       <small v-if="props.card.deadline" class="text-xs text-red-800 font-bold">
         {{ $filters.humanFormatDate(new Date(props.card.deadline)) }}
       </small>
+    </div>
+    <div v-if="(!card.is_completed) && card.total_quantity " class="progress-bar mt-2 relative group hover:h-7 transition-all flex justify-center items-center flex-col" :style="{
+      // marginBottom: '-10px',
+      // marginRight: '-6px',
+      // marginLeft: '-6px',
+    }">
+      <div class="w-full group-hover:pt-4">
+        <div class="bg-green-500" :style="{ 
+          width: progressBarWidth,
+          height: '4px', 
+          borderRadius: '2px' 
+          }">
+        </div>
+      </div>
+      <div v-if="progressBarWidth == '0%'" class="bg-gray-200" :style="{ 
+        width: '100%',
+        height: '4px', 
+        borderRadius: '2px' 
+        }"></div>
+      <span style="font-size: 0.7rem;">
+        {{ props.card.completed_quantity ?? 0 }} / {{ props.card.total_quantity }}
+      </span>
+      <div class="hidden absolute group-hover:flex justify-between items-center w-full">
+        <button @click.prevent="router.put(route('columns.cards.update', { column: props?.card?.column, card: props?.card?.id }), { completed_quantity: Math.max((props.card.completed_quantity ?? 0) - 1, 0) })"
+          class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center">
+          🔴
+        </button>
+        <button @click.prevent="router.put(route('columns.cards.update', { column: props?.card?.column, card: props?.card?.id }), { completed_quantity: Math.min((props.card.completed_quantity ?? 0) + 1, props.card.total_quantity) })"
+          class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center"
+        >
+          🟢
+        </button>
+      </div>
     </div>
   </div>
   <ConfirmDialog :show="isOpen" @confirm="closeModal($event)" title="Remove Card"

@@ -17,7 +17,9 @@ class Card extends Model
         'title',
         'is_completed',
         'deadline',
-        'parent_id'
+        'parent_id',
+        'total_quantity',
+        'completed_quantity',
     ];
 
     // casts 

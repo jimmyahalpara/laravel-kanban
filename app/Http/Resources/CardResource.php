@@ -23,6 +23,8 @@ class CardResource extends JsonResource
             'is_completed' => $this->is_completed,
             'parent' => $this->parent,
             'children' => $this->children,
+            'total_quantity' => $this->total_quantity,
+            'completed_quantity' => $this->completed_quantity,
             'deadline' => $this->deadline? $this->deadline -> format('Y-m-d H:i') : null,
         ];
     }
