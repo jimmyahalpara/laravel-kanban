@@ -11,6 +11,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardStoreController;
 use App\Http\Controllers\ColumnMoveController;
+use App\Http\Controllers\ColumnSortController;
 use App\Http\Controllers\BoardDestroyController;
 use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardUpdateTitleController;
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('columns.destroy');
     Route::post('/columns/{column}/move', ColumnMoveController::class)
         ->name('columns.move');
+    Route::post('/columns/{column}/sort', ColumnSortController::class)
+        ->name('columns.sort');
 
     Route::post('/columns/{column}/cards', ColumnCardCreateController::class)
         ->name('columns.cards.store');

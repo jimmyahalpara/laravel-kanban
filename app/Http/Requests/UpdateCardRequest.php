@@ -23,6 +23,7 @@ class UpdateCardRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => 'string|min:1|max:255',
         ];
     }
 }
