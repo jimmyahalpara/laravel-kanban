@@ -293,19 +293,24 @@ const progressBarWidth = computed(() => {
       // marginRight: '-6px',
       // marginLeft: '-6px',
     }">
-      <div class="w-full group-hover:pt-4">
+      <div class="w-full group-hover:pt-4 group-hover:px-10">
         <div class="bg-green-500" :style="{ 
           width: progressBarWidth,
           height: '4px', 
-          borderRadius: '2px' 
+          borderRadius: '2px',
+          position: 'relative',
+          zIndex: 1, 
           }">
         </div>
+        <div class="bg-gray-200" :style="{ 
+          width: '100%',
+          height: '4px', 
+          marginTop: '-4px',
+          borderRadius: '2px',
+          position: 'relative',
+          zIndex: 0,
+          }"></div>
       </div>
-      <div v-if="progressBarWidth == '0%'" class="bg-gray-200" :style="{ 
-        width: '100%',
-        height: '4px', 
-        borderRadius: '2px' 
-        }"></div>
       <span style="font-size: 0.7rem;">
         {{ props.card.completed_quantity ?? 0 }} / {{ props.card.total_quantity }}
       </span>
