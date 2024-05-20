@@ -68,4 +68,19 @@ class Column extends Model
             $columnToSwap->save();
         }
     }
+
+    /**
+     * Sort Childrent by their deadline, in ascending order
+     * 
+     * @return void
+     */
+    public function sort(){
+        // sort card by is_completed and deadline
+        $this->cards->sortBy([
+            fn($a, $b) => $a->is_completed <=> $b->is_completed,
+            fn($a, $b) => $a->deadline <=> $b->deadline
+        ])->values()->each(function($card, $index){
+            $card->update(['position' => $index * 1000 + 1000]);
+        });
+    }
 }

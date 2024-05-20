@@ -32,6 +32,12 @@ class ColumnCardUpdateController extends Controller
         if ($card->parent?->children->every->is_completed) {
             $card->parent->update(['is_completed' => true]);
         }
+        // for each children, if deadline is not set, or if more than parent deadline, then set deadline to parent deadline
+        $card->children->each(function ($child) use ($card) {
+            if ($child->deadline === null || $child->deadline > $card->deadline) {
+                $child->update(['deadline' => $card->deadline]);
+            }
+        });
         return back();
     }
 }
