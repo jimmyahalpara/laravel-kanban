@@ -78,9 +78,13 @@ class Column extends Model
         // sort card by is_completed and deadline
         $this->cards->sortBy([
             fn($a, $b) => $a->is_completed <=> $b->is_completed,
-            // deadline is not null, sort by deadline, else sort by position
-            fn($a, $b) => $a->deadline <=> $b->deadline ?: $a->position <=> $b->position,
-            fn($a, $b) => $a->deadline <=> $b->deadline
+            // keep th cards with deadline null at the end
+            function($a, $b) {
+                if($a->deadline === null && $b->deadline === null) return 0;
+                if($a->deadline === null) return 1;
+                if($b->deadline === null) return -1;
+                return $a->deadline <=> $b->deadline;
+            },
         ])->values()->each(function($card, $index){
             $card->update(['position' => $index * 1000 + 1000]);
         });
