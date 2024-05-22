@@ -11,14 +11,14 @@ import EditableText from '@/Components/EditableText.vue';
         :style="{
             borderRadius: mouseOver ? '0' : '2rem',
             borderColor: mouseOver ? 'black' : 'transparent',
-            backgroundColor: mouseOver ? 'transparent' : this.categoryObject.background_color,
-            color: mouseOver ? 'black'  :this.categoryObject.color,
+            backgroundColor: mouseOver ? 'transparent' : categoryObject.background_color,
+            color: mouseOver ? 'black'  :categoryObject.color,
             overflow: 'hidden',
             height: '1.5rem',
         }"
     >
         <div class="text-sm" :style="{
-            minWidth: this.originalWidth - 10 + 'px',
+            minWidth: originalWidth - 10 + 'px',
         }">
             <EditableText 
             :value="category.name"
