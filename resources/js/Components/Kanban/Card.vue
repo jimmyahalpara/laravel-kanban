@@ -1,13 +1,15 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
-import { router, useForm } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import { PencilIcon } from '@heroicons/vue/24/solid';
 import { TrashIcon } from '@heroicons/vue/24/solid';
 import { useEditCard } from '@/Composables/useEditCard';
 import ConfirmDialog from '@/Components/Kanban/ConfirmDialog.vue';
+// import { usePage } from '@inertiajs/inertia-vue3';
 
 const props = defineProps({
   card: Object,
+  board: Object,
 });
 
 const emit = defineEmits(['moveToTop', 'addChild']);
@@ -108,6 +110,11 @@ const greyborder = computed(() => {
 const greenborder = computed(() => {
   return props.card.is_completed;
 });
+
+
+const card_categories = computed(() => {
+  return usePage().props.board.data.card_categories;
+});
 // red border
 // return true if card.is_completed is not true and card.deadline is today
 const redborder = computed(() => {
@@ -117,6 +124,49 @@ const redborder = computed(() => {
 const progressBarWidth = computed(() => {
   return props.card.completed_quantity ? `${(props.card.completed_quantity / props.card.total_quantity) * 100}%` : '0%';
 });
+
+const toggleCardCategory = function ()  {
+  console.log('$page :>> ', card_categories);
+  // iterate over card_categories and log 
+  // find category_id in card_categories
+  // if its null or 0, set it to first category_id
+  debugger;
+  if (props.card.card_category_id) {
+    const index = card_categories.value.findIndex(category => category.id === props.card.card_category_id);
+    if (index === card_categories.value.length - 1) {
+      router.put(
+        route('columns.cards.update', {
+          column: props?.card?.column,
+          card: props?.card?.id,
+        }),
+        {
+          card_category_id: null,
+        }
+      );
+    } else {
+      router.put(
+        route('columns.cards.update', {
+          column: props?.card?.column,
+          card: props?.card?.id,
+        }),
+        {
+          card_category_id: card_categories.value[index + 1].id,
+        }
+      );
+    }
+  } else {
+    router.put(
+      route('columns.cards.update', {
+        column: props?.card?.column,
+        card: props?.card?.id,
+      }),
+      {
+        card_category_id: card_categories.value[0].id,
+      }
+    );
+  }
+  
+};
 </script>
 
 <template>
@@ -129,7 +179,14 @@ const progressBarWidth = computed(() => {
       'border-2': greenborder || redborder,
       'border-b': greyborder && !greenborder && !redborder,
     }
-  ]" :id="`card-${props.card.id}-column-${props.card.column}`">
+  ]" 
+  :style="{
+    color: props.card.card_category?.color,
+    backgroundColor: props.card.card_category?.background_color,
+  }"
+  :id="`card-${props.card.id}-column-${props.card.column}`"
+  
+  >
     <form v-if="isEditing" @keydown.esc="onCancel" @submit.prevent="onSubmit">
       <input type="text" v-model="form.title" placeholder="Card title ..."
         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -178,12 +235,26 @@ const progressBarWidth = computed(() => {
         </span>
       </p>
       <div class="group relative">
-        <b>
+        <b class="flex items-center">
           {{ props.card.title }}
+          <template v-if="card.card_category">
+            <span class="px-1 ps-3">
+              <svg width="12px" height="12px" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>tag 2</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -776.000000)" fill="#000000"> <path d="M386.816,789.835 C385.257,791.396 382.728,791.396 381.168,789.835 C379.608,788.274 379.608,785.743 381.168,784.183 C382.728,782.621 385.257,782.621 386.816,784.183 C388.376,785.743 388.376,788.274 386.816,789.835 L386.816,789.835 Z M392.097,776.993 L378.683,776.993 C377.624,776.993 377.431,777.455 376.422,778.511 L366.437,788.466 L382.552,804.581 L392.563,794.602 C393.412,793.754 394.014,793.332 394.014,792.276 L394.014,778.903 C394.014,777.849 393.155,776.993 392.097,776.993 L392.097,776.993 Z M382.58,785.596 C381.8,786.376 381.8,787.642 382.58,788.422 C383.36,789.202 384.625,789.202 385.404,788.422 C386.185,787.642 386.185,786.376 385.404,785.596 C384.625,784.815 383.36,784.815 382.58,785.596 L382.58,785.596 Z M363.217,791.676 C361.596,793.291 361.596,795.911 363.217,797.526 L373.487,807.767 C375.108,809.382 377.735,809.382 379.356,807.767 L381.135,805.993 L365.02,789.878 L363.217,791.676 L363.217,791.676 Z" id="tag-2" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+            </span>
+            <span class="text-xs">
+              {{ card.card_category?.name }}
+            </span>
+          </template>
         </b>
-        <p class="text-sm">{{ cardContent }}</p>
+        <p class="text-sm">{{ cardContent }}
+        </p>
         <div class="hidden absolute right-1 inset-0 group-hover:flex justify-end items-center">
+          <button v-if="card_categories && card_categories.length > 0" @click.prevent="toggleCardCategory" title="Change Category"
+            class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center">
+            <svg width="20px" height="20px" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>tag 2</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -776.000000)" fill="#000000"> <path d="M386.816,789.835 C385.257,791.396 382.728,791.396 381.168,789.835 C379.608,788.274 379.608,785.743 381.168,784.183 C382.728,782.621 385.257,782.621 386.816,784.183 C388.376,785.743 388.376,788.274 386.816,789.835 L386.816,789.835 Z M392.097,776.993 L378.683,776.993 C377.624,776.993 377.431,777.455 376.422,778.511 L366.437,788.466 L382.552,804.581 L392.563,794.602 C393.412,793.754 394.014,793.332 394.014,792.276 L394.014,778.903 C394.014,777.849 393.155,776.993 392.097,776.993 L392.097,776.993 Z M382.58,785.596 C381.8,786.376 381.8,787.642 382.58,788.422 C383.36,789.202 384.625,789.202 385.404,788.422 C386.185,787.642 386.185,786.376 385.404,785.596 C384.625,784.815 383.36,784.815 382.58,785.596 L382.58,785.596 Z M363.217,791.676 C361.596,793.291 361.596,795.911 363.217,797.526 L373.487,807.767 C375.108,809.382 377.735,809.382 379.356,807.767 L381.135,805.993 L365.02,789.878 L363.217,791.676 L363.217,791.676 Z" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+          </button>
           <button @click.prevent="emit('addChild', props.card);"
+            title="Add Child"
             class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center">
             <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -196,6 +267,7 @@ const progressBarWidth = computed(() => {
             </svg>
           </button>
           <button @click.prevent="emit('moveToTop', props.card);"
+            title="Move to Top"
             class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center">
             <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -207,10 +279,12 @@ const progressBarWidth = computed(() => {
             </svg>
           </button>
           <button @click.prevent="showForm"
+            title="Edit"
             class="w-8 h-8 bg-gray-50 text-gray-600 hover:text-black hover:bg-gray-200 rounded-md grid place-content-center">
             <PencilIcon class="w-5 h-5" />
           </button>
           <button @click.prevent="changeStatus"
+            title="Mark as Completed"
             class="w-8 h-8 bg-gray-50 text-green-600 hover:text-green-700 hover:bg-gray-200 rounded-md grid place-content-center"
             v-if="!props.card.is_completed">
             <svg height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -227,6 +301,7 @@ const progressBarWidth = computed(() => {
             </svg>
           </button>
           <button @click.prevent="changeStatus"
+            title="Mark as Incomplete"
             class="w-8 h-8 bg-gray-50 text-red-600 hover:text-red-700 hover:bg-gray-200 rounded-md grid place-content-center"
             v-else>
             <svg fill="rgb(220, 38, 38)" width="20px" height="20px" viewBox="0 0 24 24"
@@ -242,6 +317,7 @@ const progressBarWidth = computed(() => {
             </svg>
           </button>
           <button @click.prevent="openModal"
+            title="Delete"
             class="w-8 h-8 bg-gray-50 text-red-600 hover:text-red-700 hover:bg-gray-200 rounded-md grid place-content-center">
             <TrashIcon class="w-5 h-5" />
           </button>

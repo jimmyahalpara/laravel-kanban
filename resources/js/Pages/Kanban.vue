@@ -5,6 +5,7 @@ import { Head, router } from '@inertiajs/vue3';
 import Column from '@/Components/Kanban/Column.vue';
 import ColumnCreate from '@/Components/Kanban/ColumnCreate.vue';
 import EditableText from '@/Components/EditableText.vue';
+import CategoryList from '@/Components/CategoryList.vue';
 
 const props = defineProps({
   board: Object,
@@ -15,8 +16,17 @@ const boardTitle = computed(() => props.board?.data?.title);
 
 const columnsWithOrder = ref([]);
 
+const confirmDelete = ref(false);
+
 const onReorderChange = column => {
   columnsWithOrder.value?.push(column);
+};
+
+const confirmDeleteHandler = () => {
+  if (confirmDelete.value) {
+    router.delete(route('boards.destroy', { board: props.board.data.id }));
+  }
+  confirmDelete.value = true;
 };
 
 const onReorderCommit = () => {
@@ -48,10 +58,19 @@ const onReorderCommit = () => {
         <!-- delete button -->
         <button
           class="px-4 py-2 bg-red-500 text-white rounded-md mx-4"
-          @click="router.delete(route('boards.destroy', board.data.id))"
+          @click="confirmDeleteHandler()"
         >
-          Delete
+          {{ confirmDelete ? 'Are you sure?' : 'Delete' }}
         </button>
+        <!-- cancel button -->
+        <button
+          v-if="confirmDelete"
+          class="px-4 py-2 bg-gray-500 text-white rounded-md"
+          @click="confirmDelete = false"
+        >
+          Cancel
+        </button>
+        <CategoryList :board="board" />
       </div>
     </template>
 
