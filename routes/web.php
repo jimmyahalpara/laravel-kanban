@@ -17,6 +17,9 @@ use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardUpdateTitleController;
 use App\Http\Controllers\BoardColumnCreateController;
 use App\Http\Controllers\ColumnUpdateTitleController;
+use App\Http\Controllers\CardCategoryCreateController;
+use App\Http\Controllers\CardCategoryDeleteController;
+use App\Http\Controllers\CardCategoryUpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +73,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/cards/reorder', CardsReorderUpdateController::class)
         ->name('cards.reorder');
+
+    Route::post('/boards/{board}/category', CardCategoryCreateController::class)
+        ->name('boards.category.store');
+    Route::put('/boards/{board}/category/{cardCategory}', CardCategoryUpdateController::class)
+        ->name('boards.category.update');
+    Route::delete('/boards/{board}/category/{cardCategory}', CardCategoryDeleteController::class)
+        ->name('boards.category.destroy');
 });
 
 Route::middleware('auth')->group(function () {

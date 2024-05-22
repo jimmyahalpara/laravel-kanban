@@ -45,4 +45,9 @@ class Board extends Model
             $column->save();
         });
     }
+
+    public function cardCategories(): HasMany
+    {
+        return $this->hasMany(CardCategory::class);
+    }
 }

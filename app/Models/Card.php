@@ -20,6 +20,7 @@ class Card extends Model
         'parent_id',
         'total_quantity',
         'completed_quantity',
+        'card_category_id',
     ];
 
     // casts 
@@ -47,5 +48,10 @@ class Card extends Model
     public function children()
     {
         return $this->hasMany(Card::class, 'parent_id') -> orderBy('position');
+    }
+
+    public function cardCategory(): BelongsTo
+    {
+        return $this->belongsTo(CardCategory::class);
     }
 }

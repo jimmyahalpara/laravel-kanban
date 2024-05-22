@@ -17,6 +17,7 @@ class BoardResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'card_categories' => $this->cardCategories ?? [],
             'columns' => ColumnResource::collection($this->orderedColumns),
         ];
     }
