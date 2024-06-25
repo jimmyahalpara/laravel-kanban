@@ -458,4 +458,8 @@ const toggleCardCategory = function ()  {
 .st0 {
   fill: #ffffff;
 }
+
+input, textarea {
+  color: black;
+}
 </style>
