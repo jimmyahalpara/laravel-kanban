@@ -21,6 +21,7 @@ class Card extends Model
         'total_quantity',
         'completed_quantity',
         'card_category_id',
+        'priority',
     ];
 
     // casts 

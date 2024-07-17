@@ -19,6 +19,9 @@ class CardResource extends JsonResource
             'content' => $this->content,
             'position' => $this->position,
             'column' => $this->column_id,
+            'column_title' => $this->column->title,
+            'board_title' => $this->column->board->title,
+            'board' => $this->column->board_id,
             'title' => $this->title,
             'is_completed' => $this->is_completed,
             'parent' => $this->parent,
@@ -28,6 +31,7 @@ class CardResource extends JsonResource
             'card_category' => $this->cardCategory,
             'card_category_id' => $this->card_category_id,
             'deadline' => $this->deadline? $this->deadline -> format('Y-m-d H:i') : null,
+            'updated_at' => $this->updated_at -> format('Y-m-d H:i'),
         ];
     }
 }
