@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BoardStoreController;
 use App\Http\Controllers\ColumnMoveController;
 use App\Http\Controllers\ColumnSortController;
@@ -42,9 +43,13 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Route::get('/dashboard', function () {
+    //     return Inertia::render('Dashboard');
+    // })->name('dashboard');
+
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/update-cards', [DashboardController::class, 'updateCards'])->name('dashboard.update-cards');
 
     Route::get('/boards/{board?}', [BoardController::class, 'show'])->name('boards');
     Route::post('/boards', BoardStoreController::class)->name('boards.store');
