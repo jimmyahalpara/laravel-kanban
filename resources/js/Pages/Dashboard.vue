@@ -48,7 +48,7 @@ import { Head } from '@inertiajs/vue3';
                 <EditableText :value="element.title" @textinput="element.title = $event"/>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
-                <select class="m-0 text-center w-full rounded-sm p-0 pe-3 border-none" v-model="element.board">
+                <select class="m-0 text-center w-full rounded-sm p-0 pe-5 border-none" disabled v-model="element.board">
                   <option v-for="board in boards" :key="board.id" :value="board.id">{{ board.title }}</option>
                 </select>
               </td>
