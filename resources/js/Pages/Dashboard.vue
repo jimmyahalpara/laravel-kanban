@@ -48,18 +48,18 @@ import { Head } from '@inertiajs/vue3';
                 <EditableText :value="element.title" @textinput="element.title = $event"/>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
-                <select class="m-0 text-center w-full rounded-sm p-0 pe-5 border-none" disabled v-model="element.board">
+                <select class="m-0 text-center w-full rounded-sm p-0 pe-5 border-none bg-inherit" disabled v-model="element.board">
                   <option v-for="board in boards" :key="board.id" :value="board.id">{{ board.title }}</option>
                 </select>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
-                <select class="m-0 text-center w-full rounded-sm p-0 pe-3 border-none" v-model="element.column">
+                <select class="m-0 text-center w-full rounded-sm p-0 pe-3 border-none bg-inherit" v-model="element.column">
                   <option v-for="column in board_columns[element.board]" :key="column.id" :value="column.id">{{
                     column.title }}</option>
                 </select>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
-                <select class="m-0 text-center w-full rounded-sm p-0 pe-3 border-none" v-model="element.card_category_id"
+                <select class="m-0 text-center w-full rounded-sm p-0 pe-3 border-none bg-inherit" v-model="element.card_category_id"
                   :style="{
                     backgroundColor: getCategory(element.board, element.card_category_id)?.background_color,
                     color: getCategory(element.board, element.card_category_id)?.color
@@ -72,7 +72,7 @@ import { Head } from '@inertiajs/vue3';
                 </select>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
-                <input type="datetime-local" class="m-0 text-center w-full rounded-sm p-0 border-none" v-model="element.deadline">
+                <input type="datetime-local" class="m-0 text-center w-full rounded-sm p-0 border-none bg-inherit" v-model="element.deadline">
               </td>
               <td class="px-4 border border-gray-500 border-1">{{ element.updated_at }}</td>
             </tr>
@@ -118,9 +118,9 @@ export default {
       if (greyColor){
         return 'bg-gray-200';
       } else if (greenborder){
-        return 'bg-green-500';
+        return 'bg-green-300';
       } else if (redborder){
-        return 'bg-red-500';
+        return 'bg-red-300';
       }
     },
     updateCards(){
