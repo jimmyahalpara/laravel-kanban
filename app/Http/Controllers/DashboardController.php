@@ -13,10 +13,14 @@ use App\Models\CardCategory;
 class DashboardController extends Controller
 {
     public function index(Request $request){
-        $cards = Card::orderBy('priority') -> get();
+        $cards = Card::orderBy('priority');
+        if ($request -> input('is_archived') == 1){
+            $cards = $cards -> where('is_archived', true);
+        } else {
+            $cards = $cards -> where('is_archived', false);
+        }
+        $cards = $cards -> get();
         $cards = CardResource::collection($cards);
-
-        $boards = Board::all();
         // board columns group by board
         $board_columns = Column::all() -> groupBy('board_id');
         
@@ -24,9 +28,9 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'cards' => $cards,
-            // 'boards' => $boards,
             'board_columns' => $board_columns,
-            'board_categories' => $board_categories
+            'board_categories' => $board_categories,
+            'is_archived' => $request -> input('is_archived') == 1
         ]);
     }
 
@@ -45,6 +49,7 @@ class DashboardController extends Controller
                 'deadline' => $card['deadline'],
                 'is_completed' => $card['is_completed'],
                 'card_category_id' => $card['card_category_id'],
+                'is_archived' => $card['is_archived']
             ]);
 
             $priority++;

@@ -22,12 +22,14 @@ class Card extends Model
         'completed_quantity',
         'card_category_id',
         'priority',
+        'is_archived'
     ];
 
     // casts 
     protected $casts = [
         'is_completed' => 'boolean',
         'deadline' => 'datetime',
+        'is_archived' => 'boolean'
     ];
 
     // // hidden created_at and updated_at
