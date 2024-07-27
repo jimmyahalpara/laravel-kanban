@@ -32,6 +32,7 @@ class CardResource extends JsonResource
             'card_category_id' => $this->card_category_id,
             'deadline' => $this->deadline? $this->deadline -> format('Y-m-d H:i') : null,
             'updated_at' => $this->updated_at -> format('Y-m-d H:i'),
+            'is_archived' => $this->is_archived
         ];
     }
 }
