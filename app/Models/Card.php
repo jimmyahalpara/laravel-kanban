@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\OwnedByUserTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Card extends Model
 {
-    use HasFactory;
+    use HasFactory, OwnedByUserTrait;
 
     protected $fillable = [
         'content',
@@ -22,7 +23,8 @@ class Card extends Model
         'completed_quantity',
         'card_category_id',
         'priority',
-        'is_archived'
+        'is_archived',
+        'user_id',
     ];
 
     // casts 

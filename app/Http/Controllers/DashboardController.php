@@ -23,7 +23,6 @@ class DashboardController extends Controller
         $cards = CardResource::collection($cards);
         // board columns group by board
         $board_columns = Column::all() -> groupBy('board_id');
-        
         $board_categories = CardCategory::all() -> groupBy('board_id');
 
         return Inertia::render('Dashboard', [

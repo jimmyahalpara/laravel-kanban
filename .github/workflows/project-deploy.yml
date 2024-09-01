@@ -1,0 +1,42 @@
+name: Laravel Deployment
+
+on:
+  push:
+    branches: [ "master" ]
+jobs:
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploying UAT
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.UAT_HOST_NAME }}
+        username: ${{ secrets.UAT_HOST_USERNAME }}
+        key: ${{ secrets.UAT_HOST_SSH_KEY }}
+        port: 22
+        # script: source cd /var/www/vadmin.ooos.in; chown -R root:root . ; git pull; php artisan migrate ; npm run update install --legacy-peer-deps; npm run build; php artisan optimize:clear; chown -R www-data:www-data . ;
+        script: |
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
+          cd /var/www/kanban.jka.app
+          composer install
+          php artisan down
+          composer install --no-interaction --no-dev --prefer-dist
+          chown -R root:root .
+          git pull
+          php artisan migrate
+          npm install --legacy-peer-deps
+          npm run build
+          php artisan app:ensure-card-ownership
+          php artisan app:ensure-column-ownership
+          php artisan optimize:clear
+          chown -R www-data:www-data .
+          php artisan up
+    
+    
+    
+    
+    
+    

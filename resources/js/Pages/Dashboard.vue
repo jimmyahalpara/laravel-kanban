@@ -87,6 +87,7 @@ import { Head } from '@inertiajs/vue3';
                       backgroundColor: category?.background_color,
                       color: category?.color
                     }">{{ category.name }}</option>
+                  <option v-if="(board_categories[element.board] ?? []).length <= 0" value="" disabled>No Options</option>
                 </select>
               </td>
               <td class="px-0 py-0 border border-gray-500 border-1">
