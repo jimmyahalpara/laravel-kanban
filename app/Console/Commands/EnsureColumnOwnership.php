@@ -45,6 +45,6 @@ class EnsureColumnOwnership extends Command
         });
 
         $bar->finish();
-        $this->info(PHP_EOL . 'All cards have been updated with the correct user_id');
+        $this->info(PHP_EOL . 'All Columns have been updated with the correct user_id');
     }
 }
