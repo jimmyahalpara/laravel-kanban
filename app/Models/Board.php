@@ -50,4 +50,13 @@ class Board extends Model
     {
         return $this->hasMany(CardCategory::class);
     }
+
+    public function deleteAllColumns(): void
+    {
+        $this->columns->each(function ($column) {
+            $column->deleteAllCards();
+            $column->delete();
+        });   
+        $this -> cardCategories() -> delete();
+    }
 }

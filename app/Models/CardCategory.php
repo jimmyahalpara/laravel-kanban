@@ -30,4 +30,8 @@ class CardCategory extends Model
     {
         return $this->hasMany(Card::class);
     }
+
+    public function deleteAllCards(){
+        $this->cards()->delete();
+    }
 }

@@ -90,4 +90,8 @@ class Column extends Model
             $card->update(['position' => $index * 1000 + 1000]);
         });
     }
+
+    public function deleteAllCards(){
+        $this->cards()->delete();
+    }
 }

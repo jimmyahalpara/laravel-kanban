@@ -14,11 +14,13 @@ class BoardDestroyController extends Controller
      * 
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(Request $request, Board $board) {
+    public function __invoke(Request $request, Board $board)
+    {
+        $board->deleteAllColumns();
         $board->delete();
 
         $lastBoard = $request->user()->boards()->latest()->first();
-        if ($lastBoard){
+        if ($lastBoard) {
             return redirect()->route('boards', $lastBoard);
         } else {
             return redirect()->route('dashboard');
