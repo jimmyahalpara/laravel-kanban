@@ -20,7 +20,12 @@ class CardsReorderUpdateController extends Controller
             ->recursive() // make all nested arrays a collection
             ->map(function ($column) {
                 return $column['cards']->map(function ($card) use ($column) {
-                    return ['id' => $card['id'], 'position' => $card['position'], 'column_id' => $column['id']];
+                    return [
+                        'id' => $card['id'], 
+                        'position' => $card['position'], 
+                        'column_id' => $column['id'],
+                        'user_id' => auth()->id(),
+                    ];
                 });
             })
             ->flatten(1)
